@@ -6,49 +6,66 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
-  
-  outputs = { self, flake-utils, nixpkgs, rust-overlay }: {
-    
-    rust = { config, lib, nixpkgs, rust-overlay, ... }:
-      with lib;
-      let
-        cfg = config.easy-flake.rust;
 
-        system = "x86_64-linux";
-
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ rust-overlay.overlay ];
+  outputs = { self, flake-utils, nixpkgs, rust-overlay }:
+  with nixpkgs.lib;
+  let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs {
+      inherit system;
+      overlays = [ rust-overlay.overlay ];
+    };
+  in {
+    rust = { nightly ? false
+      , stable ? true
+      , ssl ? false
+      , hook ? ""
+      , inputs ? []
+    }:
+      flake-utils.lib.eachDefaultSystem (system: {
+        devShell = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            cargo-edit
+            cargo-expand
+            cargo-outdated
+            cargo-watch
+          ] ++ inputs
+            ++ optionals ssl [ pkgconfig openssl ]
+            ++ optional nightly rust-bin.nightly.latest.default
+            ++ optional stable rust-bin.stable.latest.default;
+          shellHook = hook;
         };
-
-
-      in {
-
-        options.easy-flake.rust.enable = mkEnableOption "Enables the rust environment";
-
-        config = mkIf cfg.enable {
-            devShell.${system} = (({ pkgs, ... }:
-              pkgs.mkShell {
-                  buildInputs = with pkgs; [
-                    pkgconfig
-                    openssl
-                    cargo
-                    cargo-watch
-                    nodejs
-                    wasm-pack
-                    nodePackages.webpack-cli
-                    nodePackages.serve
-                    (rust-bin.stable.latest.default.override {
-                     extensions = [ "rust-src" ];
-                     targets = [ "wasm32-unknown-unknown" ];
-                     })
-                  ];
-
-                  shellHook = "";
-              }) {
-                pkgs = pkgs;
-              });
-          };
-      };
+      });
   };
 }
+        # options.rust = {
+        #   enable = mkEnableOption "Enable rust environment";
+        # };
+
+        # config = mkIf cfg.enable {
+        #   outputs.devShell.x86_64-linux = pkgs.mkShell {
+        #     shellHook = "echo hiiiii";
+        #   };
+        # };
+
+        # config = mkIf cfg.enable {
+        #   devShell.x86_64-linux = pkgs.mkShell {
+        #     shellHook = "echo works";
+        #     buildInputs = with pkgs; [
+        #       rust-bin.stable.latest.default
+        #         cargo-edit
+        #         cargo-expand
+        #         cargo-outdated
+        #         cargo-watch
+        #         lldb
+        #         rust-analyzer
+
+        #         nixpkgs-fmt
+
+        #         pkgconfig
+        #         openssl
+        #     ];
+        #   };
+        # };
+  # };
+# }
