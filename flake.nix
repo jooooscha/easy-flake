@@ -22,10 +22,16 @@
       , ssl ? false
       , inputs ? []
       , lsp ? true
+      , targets ? []
+      , extensions ? []
     }:
+    with pkgs;
     let 
-      rustStable = optional stable pkgs.rust-bin.stable.latest.default;
-      rustNightly = optional nightly (pkgs.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default));
+      rustStable = optional stable (rust-bin.stable.latest.default.override {
+        extensions = [ "rust-src" ] ++ extensions;
+        targets = targets;
+      });
+      rustNightly = optional nightly (rust-bin.selectLatestNightlyWith (toolchain: toolchain.default));
     in flake-utils.lib.eachDefaultSystem (system: {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
