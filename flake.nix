@@ -25,8 +25,8 @@
       , version ? ""
     }:
     let 
-      rustStable = optional stable rust-bin.stable.latest.default;
-      rustNightly = optional nightly rust-bin.selectLatestNightlyWith (toolchain: toolchain.default);
+      rustStable = optional stable pkgs.rust-bin.stable.latest.default;
+      rustNightly = optional nightly (pkgs.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default));
     in flake-utils.lib.eachDefaultSystem (system: {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
@@ -38,7 +38,7 @@
             ++ optionals ssl     [ pkgconfig openssl ]
             ++ optional  lsp     rust-analyzer
             ++ rustNightly
-            ++ rustStable
+            ++ rustStable;
           shellHook = ''
             echo ""
             echo " *** Rust Dev Shell ***"
