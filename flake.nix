@@ -22,7 +22,6 @@
       , ssl ? false
       , inputs ? []
       , lsp ? true
-      , version ? ""
     }:
     let 
       rustStable = optional stable pkgs.rust-bin.stable.latest.default;
