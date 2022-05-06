@@ -78,9 +78,9 @@
               nativeBuildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
             };
 
-          in flake-utils.lib.eachDefaultSystem (system: {
+          in flake-utils.lib.eachDefaultSystem (system: rec {
             packages."${name}" = rust-package;
-            defaultpackage = packages."${name}";
+            defaultPackage = packages."${name}";
             devShell = rust-shell;
           }); # end rust
       }; # end output set
