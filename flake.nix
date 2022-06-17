@@ -40,7 +40,7 @@
               targets = targets;
             });
 
-            rustNightly-input = optional nightly (rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override { extensions = [ "rust-src" ]; } ));
+            rustNightly-input = optional nightly (rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override { extensions = [ "rust-src" ] ++ extensions; } ));
 
             rust-default-inputs = with pkgs; [
                 cargo-edit
