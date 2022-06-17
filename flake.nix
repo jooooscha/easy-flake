@@ -28,7 +28,7 @@
             , targets ? []
             , extensions ? []
             , name ? "no-name-given"
-            , root
+            , root ? ./.
           }:
           with pkgs;
           let 
@@ -82,6 +82,7 @@
             packages."${name}" = rust-package;
             defaultPackage = packages."${name}";
             devShell = rust-shell;
+            # formatter = rust-formatter;
           }); # end rust
       }; # end output set
 }
