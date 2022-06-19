@@ -42,7 +42,7 @@
 
             rustNightly-input = optional nightly (rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override { extensions = [ "rust-src" ] ++ extensions; } ));
 
-            rust-default-inputs = with pkgs; [
+            default-inputs = with pkgs; [
                 cargo-edit
                 cargo-expand
                 cargo-outdated
@@ -51,8 +51,8 @@
 
             # Shell
 
-            rust-shell = pkgs.mkShell {
-              buildInputs = rust-default-inputs ++ inputs
+            shell = pkgs.mkShell {
+              buildInputs = default-inputs ++ inputs
                 ++ optionals ssl     [ pkgconfig openssl ]
                 ++ optional  lsp     rust-analyzer
                 ++ rustNightly-input
@@ -72,7 +72,7 @@
 
             # Nix build package
 
-            rust-package = naersk-lib.buildPackage {
+            package = naersk-lib.buildPackage {
               pname = "${name}";
               root = root;
               buildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
@@ -80,10 +80,27 @@
             };
 
           in flake-utils.lib.eachDefaultSystem (system: rec {
-            packages."${name}" = rust-package;
+            packages."${name}" = package;
             defaultPackage = packages."${name}";
-            devShell = rust-shell;
+            devShell = shell;
             # formatter = rust-formatter;
           }); # end rust
+
+          python-packages = pkgs.python310Packages;
+          python = { inputs ? [] }:
+            with pkgs;
+            let
+              shell = pkgs.mkShell {
+                buildInputs = [
+                  python310
+                ] ++ inputs;
+                shellHook = ''
+                  PYTHONPATH=${python310}/${python310.sitePackages}
+                '';
+              };
+            in flake-utils.lib.eachDefaultSystem (system: rec {
+              devShell = shell;
+            }); # end python
+
       }; # end output set
 }
