@@ -31,7 +31,7 @@
             , root ? ./.
           }:
           with pkgs;
-          let 
+          let
 
             # All inputs
 
@@ -98,9 +98,14 @@
                   PYTHONPATH=${python310}/${python310.sitePackages}
                 '';
               };
-            in flake-utils.lib.eachDefaultSystem (system: rec {
+            in flake-utils.lib.eachDefaultSystem (system: {
               devShell = shell;
             }); # end python
 
-      }; # end output set
+          shell = { shell }:
+            flake-utils.lib.eachDefaultSystem (system: {
+                devShell = import shell { inherit pkgs; };
+            }); # end shell
+
+      }; # end output-set
 }
