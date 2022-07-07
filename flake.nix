@@ -14,7 +14,12 @@
         system = "x86_64-linux";
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ rust-overlay.overlay ];
+          overlays = [
+            rust-overlay.overlay
+            ( self: super: {
+              python = super.python310Packages; 
+            })
+          ];
         };
         naersk-lib = naersk.lib.${system};
       in {
