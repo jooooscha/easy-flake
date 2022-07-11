@@ -23,6 +23,7 @@
       };
       naersk-lib = naersk.lib.${system};
       rust-module = import ./modules/rust.nix { inherit pkgs flake-utils; lib = pkgs.lib; };
+      python-module = import ./modules/python.nix { inherit pkgs flake-utils; lib = pkgs.lib; };
     in {
       pkgs = pkgs;
 
