@@ -1,4 +1,4 @@
-{ pkgs, flake-utils, lib, ... }:
+{ pkgs, flake-utils, lib, naersk-lib, ... }:
 {
   rust = { nightly ? false
       , stable ? true
