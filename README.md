@@ -6,6 +6,13 @@ The goal is to only need one input for the `flake.nix`
 
 The flake re-exports pkgs for example for python.
 
+Currently supports:
+- Rust:
+  - Build using [crane](https://github.com/ipetkov/crane)
+  - devshell
+- Pyhton:
+  - devshell
+
 ## Example
 
 This example creates a rust `devShell` with rust nightly.
