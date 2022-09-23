@@ -33,9 +33,10 @@
         buildInputs = default-inputs ++ inputs
           ++ optionals ssl     [ pkgconfig openssl ]
           ++ optional  lsp     rust-analyzer
-          ++ optional  gdb     gdb
+          ++ optional  gdb     pkgs.gdb
           ++ rustNightly-input
           ++ rustStable-input;
+
         shellHook = ''
           echo ""
           echo " *** Rust Dev Shell ***"
