@@ -3,6 +3,7 @@
   rust = { nightly ? false
       , stable ? true
       , ssl ? false
+      , gdb ? false
       , inputs ? []
       , lsp ? true
       , targets ? []
@@ -32,6 +33,7 @@
         buildInputs = default-inputs ++ inputs
           ++ optionals ssl     [ pkgconfig openssl ]
           ++ optional  lsp     rust-analyzer
+          ++ optional  gdb     gdb
           ++ rustNightly-input
           ++ rustStable-input;
         shellHook = ''
@@ -42,6 +44,7 @@
           echo "   - nightly:  ${ boolToString nightly }"
           echo "   - lsp:      ${ boolToString lsp }"
           echo "   - ssl:      ${ boolToString ssl }"
+          echo "   - gdb:      ${ boolToString gdb }"
           echo "   - name:     ${ name }"
           echo ""
           '';
