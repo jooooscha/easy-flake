@@ -1,0 +1,26 @@
+name: Run nix flake update
+
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+jobs:
+  fetch-new-plugins:
+    runs-on: ubuntu-latest
+    name: run nix flake update
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.NIXPKGS_TOKEN }}
+          ref: ${{ github.head_ref }}
+      - run: |
+         nix flake update
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_user_name: github_action
+          commit_user_email: ""
+          commit_author: ""
+          commit_message: 'update inputs'
+          file_pattern: flake.lock
+          # push_options: '--force'
