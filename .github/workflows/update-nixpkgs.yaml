@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.NIXPKGS_TOKEN }}
           ref: ${{ github.head_ref }}
       - run: |
          nix flake update
