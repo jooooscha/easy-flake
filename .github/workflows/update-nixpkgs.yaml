@@ -2,7 +2,7 @@ name: Run nix flake update
 
 on:
   schedule:
-    - cron: "0 20 * * *"
+    - cron: "0 20 */3 * *"
   workflow_dispatch:
 
 jobs:
