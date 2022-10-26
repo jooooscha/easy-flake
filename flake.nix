@@ -19,9 +19,9 @@
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          rust-overlay.overlay
+          rust-overlay.overlays.default
           ( self: super: {
-            python = super.python310Packages; 
+            python = super.python310Packages;
           })
         ];
       };
