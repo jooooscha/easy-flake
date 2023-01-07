@@ -13,37 +13,41 @@
   };
 
   outputs = { self, flake-utils, nixpkgs, rust-overlay, crane }:
-    with nixpkgs.lib;
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          rust-overlay.overlays.default
-          ( self: super: {
-            python = super.python310Packages;
-          })
-        ];
-      };
-      # naersk-lib = naersk.lib.${system};
-      craneLib = crane.lib.${system};
-      rust-module = import ./modules/rust.nix { inherit pkgs flake-utils craneLib; lib = pkgs.lib; };
-      python-module = import ./modules/python.nix { inherit pkgs flake-utils; lib = pkgs.lib; };
-    in {
-      pkgs = pkgs;
+    flake-utils.lib.eachDefaultSystem (system:
+      with nixpkgs.lib;
 
-      rust = {
-        env = rust-module.rust;
-      };
+      let
+        system = "x86_64-linux";
 
-      python = {
-        env = python-module.python;
-        pkgs = pkgs.python310Packages;
-      };
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [
+            rust-overlay.overlays.default
+            ( self: super: {
+              python = super.python310Packages;
+            })
+          ];
+        };
+        # naersk-lib = naersk.lib.${system};
+        craneLib = crane.lib.${system};
+        rust-module = import ./modules/rust.nix { inherit pkgs flake-utils craneLib; lib = pkgs.lib; };
+        python-module = import ./modules/python.nix { inherit pkgs flake-utils; lib = pkgs.lib; };
+      in {
+        pkgs = pkgs;
 
-      shell = { shell }:
-        flake-utils.lib.eachDefaultSystem (system: {
-            devShell = import shell { inherit pkgs; };
-        }); # end shell
-    }; # end output-set
+        rust = {
+          env = rust-module.rust;
+        };
+
+        python = {
+          env = python-module.python;
+          pkgs = pkgs.python310Packages;
+        };
+
+        shell = { shell }:
+          flake-utils.lib.eachDefaultSystem (system: {
+              devShell = import shell { inherit pkgs; };
+          }); # end shell
+      } # end output-set
+    );
 }
