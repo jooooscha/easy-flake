@@ -24,7 +24,7 @@ This example creates a rust `devShell` with rust nightly.
   inputs.easy.url = "github:jooooscha/easy-flake";
 
   outputs = { easy, ... }:
-    easy.rust.env {
+    easy.rust.x86_64-linux.env {
       nightly = true;
     };
 }
@@ -39,7 +39,7 @@ This example shows an example with pyhton
   inputs.easy.url = "github:jooooscha/easy-flake";
 
   outputs = { easy, ... }:
-    easy.python.env {
+    easy.python.x86_64-linux.env {
       inputs = with easy.python.pkgs; [
         pylatexenc        
       ];
