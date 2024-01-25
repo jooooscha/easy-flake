@@ -31,7 +31,7 @@
 
       shell = pkgs.mkShell {
         buildInputs = default-inputs ++ inputs
-          ++ optionals ssl     [ pkgconfig openssl ]
+          ++ optionals ssl     [ pkg-config openssl ]
           ++ optional  lsp     rust-analyzer
           ++ optional  gdb     pkgs.gdb
           ++ rustNightly-input
