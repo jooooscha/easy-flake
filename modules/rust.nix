@@ -54,19 +54,19 @@
       # package = naersk-lib.buildPackage {
       #   pname = "${name}";
       #   root = root;
-      #   buildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
-      #   nativeBuildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
+      #   buildInputs = with pkgs; [ openssl pkg-config xorg.libxcb python310 ];
+      #   nativeBuildInputs = with pkgs; [ openssl pkg-config xorg.libxcb python310 ];
       # };
       package = craneLib.buildPackage {
         pname = name;
         src = root;
-        buildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
-        nativeBuildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
+        buildInputs = with pkgs; [ openssl pkg-config xorg.libxcb python310 ];
+        nativeBuildInputs = with pkgs; [ openssl pkg-config xorg.libxcb python310 ];
       };
 
       clippy = craneLib.cargoClippy ({
-        buildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
-        nativeBuildInputs = with pkgs; [ openssl pkgconfig xorg.libxcb python310 ];
+        buildInputs = with pkgs; [ openssl pkg-config xorg.libxcb python310 ];
+        nativeBuildInputs = with pkgs; [ openssl pkg-config xorg.libxcb python310 ];
         cargoClippyExtraArgs = "--deny warnings";
       });
 
